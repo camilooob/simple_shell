@@ -37,7 +37,7 @@ void place(char *str)
 	}
 	charput('\n');
 }
-size_t getinput()
+size_t getinput(char *str)
 {
 char *buffer;
     size_t bufsize = 32;
@@ -50,7 +50,7 @@ char *buffer;
         exit(1);
     }
 
-    printf("$>");
+    printf("Type something: ");
     characters = getline(&buffer,&bufsize,stdin);
     printf("%zu characters were read.\n",characters);
     printf("You typed: '%s'\n",buffer);

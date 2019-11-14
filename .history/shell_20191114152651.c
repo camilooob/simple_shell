@@ -50,7 +50,7 @@ char *buffer;
         exit(1);
     }
 
-    printf("$>");
+    printf("Type something: ");
     characters = getline(&buffer,&bufsize,stdin);
     printf("%zu characters were read.\n",characters);
     printf("You typed: '%s'\n",buffer);
