@@ -32,20 +32,17 @@ void place(char *str)
 {
 	while (*str != '\0')
 	{
-		charput(*str);
+		_putchar(*str);
 		str++;
 	}
-	charput('\n');
+	_putchar('\n');
 }
 
 
 int main(int ac, char **av)
 {
 
-place("-----Super Master Shell----\n");
-place("      -----by:----\n");
-place(" -----Sergio Pietri----\n");
-place(" -----Camilo Baquero---\n");
-place("    ----- 2019 ----\n");
-  return (0);
+place("Hola my Shell");
+
+  return (RUN)
 }

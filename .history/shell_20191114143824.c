@@ -45,7 +45,7 @@ int main(int ac, char **av)
 place("-----Super Master Shell----\n");
 place("      -----by:----\n");
 place(" -----Sergio Pietri----\n");
-place(" -----Camilo Baquero---\n");
+place(" -----Camilo Baquero----\n");
 place("    ----- 2019 ----\n");
   return (0);
 }
