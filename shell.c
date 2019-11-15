@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 /*
  *
  */
@@ -10,6 +11,10 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 >>>>>>> 5ba74ac819ad5cac235ae649c239222283295b2b
+=======
+#include <sys/wait.h>
+#include <sys/types.h>
+>>>>>>> 5ba74ac819ad5cac235ae649c239222283295b2b
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,6 +22,12 @@
 #include <unistd.h>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+char *show_input(void);
+
+
+>>>>>>> 5ba74ac819ad5cac235ae649c239222283295b2b
 =======
 char *show_input(void);
 
@@ -34,6 +45,7 @@ int charput(char c)
 	return (write(1, &c, 1));
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 /**
   * place - similar to puts in C
   * @str: a pointer the integer we want to set to 402
@@ -41,6 +53,8 @@ int charput(char c)
   * Return: int
   */
 =======
+=======
+>>>>>>> 5ba74ac819ad5cac235ae649c239222283295b2b
 
 
 /**
@@ -49,6 +63,9 @@ int charput(char c)
  *
  * Return: int
  */
+<<<<<<< HEAD
+>>>>>>> 5ba74ac819ad5cac235ae649c239222283295b2b
+=======
 >>>>>>> 5ba74ac819ad5cac235ae649c239222283295b2b
 void place(char *str)
 {
@@ -57,6 +74,7 @@ void place(char *str)
 		charput(*str);
 		str++;
 	}
+<<<<<<< HEAD
 <<<<<<< HEAD
 	charput('\n');
 }
@@ -98,6 +116,8 @@ getinput();
 
   return (0);
 =======
+=======
+>>>>>>> 5ba74ac819ad5cac235ae649c239222283295b2b
 }
 /**
  * call prompt from another function (prompt)
@@ -170,5 +190,8 @@ void main(int ac, char **av)
 		prompt();
 	}
 
+<<<<<<< HEAD
+>>>>>>> 5ba74ac819ad5cac235ae649c239222283295b2b
+=======
 >>>>>>> 5ba74ac819ad5cac235ae649c239222283295b2b
 }
