@@ -37,6 +37,80 @@ void place(char *str)
 	}
 }
 /**
+ * _strcat - concatenates two words.
+ * @dest: output
+ * @src: input
+ * Return: x.
+ */
+
+char *_strcat(char *dest, char *src)
+
+{
+
+    char *x = dest;
+
+    for (; *dest != '\0' ; dest++)
+
+    {
+
+        ;
+
+    }
+
+    for (; *src != '\0'; src++)
+
+    {
+
+        *dest = *src;
+
+        dest++;
+
+    }
+
+    *dest = '\0';
+
+    return (x);
+
+}
+
+    for (; *src != '\0'; src++)
+
+    {
+
+        *dest = *src;
+
+        dest++;
+
+    }
+
+    *dest = '\0';
+
+    return (x);
+
+}
+/**
+ * execute_proc - similar to puts in C
+ * @str: a pointer the integer we want to set to 402
+ *
+ * Return: int
+ */
+void execute_proc(char *str)
+{ 
+  char *argv[] = {"/bin/", "/usr/", NULL};
+  
+  printf("Ejecutandooo\n");
+  if (execve(argv[0], argv, NULL) == -1)
+    {
+      perror("Error:");
+    }
+  printf("After execve\n");
+
+}
+
+
+
+
+/**
  * call prompt from another function (prompt)
  *
  **/
@@ -61,6 +135,7 @@ char **identify_string(char *parameter)
 	while(buf[j] != NULL)/*This will run through the array of words in buf and print them */
 	{
 	  place(*(buf + j));
+	  execute_proc(*(buf + j));
 	  charput('\n');
 	  j++;
 	}
