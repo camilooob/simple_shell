@@ -44,28 +44,26 @@ char **identify_string(char *parameter)
 {
 	char **buf = malloc(1024 * sizeof(char*));
 	char *split;
-	int i = 1;
+	int i = 1, j = 1;
 
-	split = strtok(parameter, "");
+	split = strtok(parameter, " ");
 
-	while (split != NULL)
+	while (split != NULL)/* This is to save the text in getline to a buffer  */
 	{
 	  /*PENDIENTE: eliminar espacio en blanco y hacer que guarde la vaina separado*/
-	  if (*split)
-	    {
 	      buf[i] = split;
 	      i++;
-	    }
-	  
 	  
 	  split = strtok(NULL, " ");
 	}
 
 	
-	place(*(buf + 1));
-	
-	
-	
+	while(buf[j] != NULL)/*This will run through the array of words in buf and print them */
+	{
+	  place(*(buf + j));
+	  charput('\n');
+	  j++;
+	}
 	return (buf);
 }
 /**
