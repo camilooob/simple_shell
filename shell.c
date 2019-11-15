@@ -44,17 +44,28 @@ char **identify_string(char *parameter)
 {
 	char **buf = malloc(1024 * sizeof(char*));
 	char *split;
-	int i = 0;
+	int i = 1;
 
-	strtok(parameter, " ");
+	split = strtok(parameter, "");
 
 	while (split != NULL)
 	{
-		buf[i] = split;
-		i++;
+	  /*PENDIENTE: eliminar espacio en blanco y hacer que guarde la vaina separado*/
+	  if (*split)
+	    {
+	      buf[i] = split;
+	      i++;
+	    }
+	  
+	  
+	  split = strtok(NULL, " ");
 	}
 
-
+	
+	place(*(buf + 1));
+	
+	
+	
 	return (buf);
 }
 /**
@@ -86,11 +97,6 @@ char *show_input(void)
 	place("$ ");
 	getline(&text, &bufsize, stdin);
 
-
-	if(get == "exit")
-	{
-		place("exit");
-	}
 
 	return (text);
 }
