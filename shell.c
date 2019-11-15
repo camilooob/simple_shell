@@ -7,7 +7,9 @@
 #include <unistd.h>
 
 char *show_input(void);
-
+void prompt(void);
+char *_strcat(char *src);
+int _strlen(char *str);
 
 /**
  * charput - writes the character like putchar
@@ -36,79 +38,82 @@ void place(char *str)
 		str++;
 	}
 }
+
 /**
- * _strcat - concatenates two words.
- * @dest: output
- * @src: input
- * Return: x.
+ * _strlen - Len string.
+ * @str: My string.
+ * Return: Length.
  */
-
-char *_strcat(char *dest, char *src)
-
+int _strlen(char *str)
 {
+    int i;
 
-    char *x = dest;
+    for (i = 0; str[i] != '\0'; i++)
+      ;
 
-    for (; *dest != '\0' ; dest++)
-
-    {
-
-        ;
-
-    }
-
-    for (; *src != '\0'; src++)
-
-    {
-
-        *dest = *src;
-
-        dest++;
-
-    }
-
-    *dest = '\0';
-
-    return (x);
-
+    return (i);
 }
 
-    for (; *src != '\0'; src++)
+/**
+ * str_concat - concatane strings.
+ * @s1: string.
+ * @s2: second string.
+ * Return: strings.
+ */
+char *str_concat(char *s1, char *s2)
+{
+    char *a;
+    int lens1, lens2, j, i, e;
 
+    if (s1 == NULL)
+        s1 = "";
+
+    if (s2 == NULL)
+        s2 = "";
+
+    lens1 = _strlen(s1);
+
+    lens2 = _strlen(s2);
+
+    a = malloc(((lens1) + (lens2) + 1) * sizeof(char));
+
+    if (a == NULL)
+        return (NULL);
+
+    for (j = 0; j < lens1; j++)
     {
-
-        *dest = *src;
-
-        dest++;
-
+        a[j] = s1[j];
     }
 
-    *dest = '\0';
-
-    return (x);
-
+    for (i = lens1, e = 0; e <= lens2; i++, e++)
+    {
+        a[i] = s2[e];
+    }
+    return (a);
 }
+
 /**
  * execute_proc - similar to puts in C
  * @str: a pointer the integer we want to set to 402
  *
  * Return: int
  */
-void execute_proc(char *str)
-{ 
-  char *argv[] = {"/bin/", "/usr/", NULL};
+void execute_proc(char *cmd)
+{
+  place(cmd);
+ 
+  char *s = str_concat("/bin/", cmd);
+  place(s);
+  char *argv[] = {s, ".", NULL};
   
-  printf("Ejecutandooo\n");
+  
   if (execve(argv[0], argv, NULL) == -1)
     {
       perror("Error:");
     }
-  printf("After execve\n");
 
+  
 }
-
-
-
 
 /**
  * call prompt from another function (prompt)
@@ -118,7 +123,7 @@ char **identify_string(char *parameter)
 {
 	char **buf = malloc(1024 * sizeof(char*));
 	char *split;
-	int i = 1, j = 1;
+	int i = 0, j = 1;
 
 	split = strtok(parameter, " ");
 
@@ -132,13 +137,14 @@ char **identify_string(char *parameter)
 	}
 
 	
-	while(buf[j] != NULL)/*This will run through the array of words in buf and print them */
+	/*while(buf[j] != NULL) This will run through the array of words in buf and print them 
 	{
 	  place(*(buf + j));
-	  execute_proc(*(buf + j));
 	  charput('\n');
 	  j++;
-	}
+	}*/
+	
+	execute_proc(*(buf));
 	return (buf);
 }
 /**
