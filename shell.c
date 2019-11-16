@@ -100,10 +100,7 @@ char *str_concat(char *s1, char *s2)
  */
 void execute_proc(char *cmd)
 {
-  place(cmd);
- 
   char *s = str_concat("/bin/", cmd);
-  place(s);
   char *argv[] = {s, ".", NULL};
   
   
@@ -125,7 +122,7 @@ char **identify_string(char *parameter)
 	char *split;
 	int i = 0, j = 1;
 
-	split = strtok(parameter, " ");
+	split = strtok(parameter, " \t\r\n\a");
 
 	while (split != NULL)/* This is to save the text in getline to a buffer  */
 	{
@@ -153,15 +150,11 @@ char **identify_string(char *parameter)
  **/
 void prompt(void)
 {
-	char *text;
-	char **pars;
-
-	text = show_input();
-	pars = identify_string(text);
-
-
-
-	
+  char *text;
+  char **pars;
+  
+      text = show_input();
+      pars = identify_string(text);
 }
 
 /**
