@@ -7,6 +7,7 @@
 #include <unistd.h>
 
 char *show_input(void);
+
 void prompt(void);
 char *_strcat(char *src);
 int _strlen(char *str);
@@ -38,6 +39,51 @@ void place(char *str)
 		str++;
 	}
 }
+<<<<<<< HEAD
+/**
+ * call prompt from another function (prompt)
+ *
+ **/
+char **identify_string(char *parameter)
+{
+	char **buf = malloc(1024 * sizeof(char*));
+	char *split;
+	int i = 1;
+
+	split = strtok(parameter, "");
+
+	while (split != NULL)
+	{
+	  /*PENDIENTE: eliminar espacio en blanco y hacer que guarde la vaina separado*/
+	  if (*split)
+	    {
+	      buf[i] = split;
+	      i++;
+	    }
+	  
+	  
+	  split = strtok(NULL, " ");
+	}
+
+	
+	place(*(buf + 1));
+	
+	
+	
+	return (buf);
+}
+/**
+ * call prompt from another function (prompt)
+ *
+ **/
+void prompt(void)
+{
+	char *text;
+	char **pars;
+
+	text = show_input();
+	pars = identify_string(text);
+=======
 
 /**
  * _strlen - Len string.
@@ -91,6 +137,7 @@ char *str_concat(char *s1, char *s2)
     }
     return (a);
 }
+>>>>>>> b3a90266297dd14bc21e9f6c565bb71af3a84645
 
 /**
  * execute_proc - similar to puts in C
@@ -180,11 +227,15 @@ char *show_input(void)
     }
     }
 
+<<<<<<< HEAD
 void handler_function()
 {
 
 
 }
+=======
+
+>>>>>>> f90917512bfbb2b2b7fd555643c8ff4acc470786
 /**
  * main func with infinite loop
  *
