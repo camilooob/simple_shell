@@ -99,14 +99,17 @@ char *str_concat(char *s1, char *s2)
  * Return: int
  */
 void execute_proc(char *cmd)
-{
+{ 
   char *s = str_concat("/bin/", cmd);
   char *argv[] = {s, ".", NULL};
-  
+  char *env[] = {s,NULL};
+
+  execve(s, argv, env);
+ 
   
   if (execve(argv[0], argv, NULL) == -1)
     {
-      perror("Error:");
+      perror("Error");
     }
 
   
@@ -120,6 +123,7 @@ char **identify_string(char *parameter)
 {
 	char **buf = malloc(1024 * sizeof(char*));
 	char *split;
+
 	int i = 0, j = 1;
 
 	split = strtok(parameter, " \t\r\n\a");
@@ -134,6 +138,7 @@ char **identify_string(char *parameter)
 	}
 
 	
+
 	/*while(buf[j] != NULL) This will run through the array of words in buf and print them 
 	{
 	  place(*(buf + j));
@@ -150,11 +155,12 @@ char **identify_string(char *parameter)
  **/
 void prompt(void)
 {
-  char *text;
-  char **pars;
-  
-      text = show_input();
-      pars = identify_string(text);
+	char *text;
+	char **pars;
+        
+	    text = show_input();
+	    pars = identify_string(text);
+
 }
 
 /**
@@ -165,24 +171,40 @@ char *show_input(void)
 {
 	char *text = NULL, *get;
 	ssize_t bufsize = 0;
-
+    while(1)
+    {
 	place("$ ");
 	getline(&text, &bufsize, stdin);
 
-
 	return (text);
-}
+    }
+    }
 
+void handler_function()
+{
+
+
+}
 /**
  * main func with infinite loop
  *
  **/
 void main(int ac, char **av)
 {
-
-	while(1)
+  pid_t my_pid;
+  pid_t pid;
+  
+  pid = fork();
+  if(pid == -1)
+    {
+      perror("Error:");
+    }
+  else if(pid == 0)
+    {
+      while(1)
 	{
-		prompt();
-	}
-
+	  prompt();
+	  signal(SIGINT, handler_function);
+	}   
+    }
 }
