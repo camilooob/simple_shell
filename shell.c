@@ -7,7 +7,6 @@
 #include <unistd.h>
 
 char *show_input(void);
-
 void prompt(void);
 char *_strcat(char *src);
 int _strlen(char *str);
@@ -39,51 +38,6 @@ void place(char *str)
 		str++;
 	}
 }
-<<<<<<< HEAD
-/**
- * call prompt from another function (prompt)
- *
- **/
-char **identify_string(char *parameter)
-{
-	char **buf = malloc(1024 * sizeof(char*));
-	char *split;
-	int i = 1;
-
-	split = strtok(parameter, "");
-
-	while (split != NULL)
-	{
-	  /*PENDIENTE: eliminar espacio en blanco y hacer que guarde la vaina separado*/
-	  if (*split)
-	    {
-	      buf[i] = split;
-	      i++;
-	    }
-	  
-	  
-	  split = strtok(NULL, " ");
-	}
-
-	
-	place(*(buf + 1));
-	
-	
-	
-	return (buf);
-}
-/**
- * call prompt from another function (prompt)
- *
- **/
-void prompt(void)
-{
-	char *text;
-	char **pars;
-
-	text = show_input();
-	pars = identify_string(text);
-=======
 
 /**
  * _strlen - Len string.
@@ -137,7 +91,6 @@ char *str_concat(char *s1, char *s2)
     }
     return (a);
 }
->>>>>>> b3a90266297dd14bc21e9f6c565bb71af3a84645
 
 /**
  * execute_proc - similar to puts in C
@@ -146,20 +99,20 @@ char *str_concat(char *s1, char *s2)
  * Return: int
  */
 void execute_proc(char *cmd)
-{ 
+{
   char *s = str_concat("/bin/", cmd);
   char *argv[] = {s, ".", NULL};
   char *env[] = {s,NULL};
 
   execve(s, argv, env);
- 
-  
+
+
   if (execve(argv[0], argv, NULL) == -1)
     {
       perror("Error");
     }
 
-  
+
 }
 
 /**
@@ -180,11 +133,11 @@ char **identify_string(char *parameter)
 	  /*PENDIENTE: eliminar espacio en blanco y hacer que guarde la vaina separado*/
 	      buf[i] = split;
 	      i++;
-	  
+
 	  split = strtok(NULL, " ");
 	}
 
-	
+
 
 	/*while(buf[j] != NULL) This will run through the array of words in buf and print them 
 	{
@@ -192,7 +145,7 @@ char **identify_string(char *parameter)
 	  charput('\n');
 	  j++;
 	}*/
-	
+
 	execute_proc(*(buf));
 	return (buf);
 }
@@ -204,9 +157,9 @@ void prompt(void)
 {
 	char *text;
 	char **pars;
-        
-	    text = show_input();
-	    pars = identify_string(text);
+
+	text = show_input();
+	pars = identify_string(text);
 
 }
 
@@ -227,35 +180,20 @@ char *show_input(void)
     }
     }
 
-<<<<<<< HEAD
 void handler_function()
 {
 
 
 }
-=======
-
->>>>>>> f90917512bfbb2b2b7fd555643c8ff4acc470786
 /**
  * main func with infinite loop
  *
  **/
 void main(int ac, char **av)
 {
-  pid_t my_pid;
-  pid_t pid;
-  
-  pid = fork();
-  if(pid == -1)
-    {
-      perror("Error:");
-    }
-  else if(pid == 0)
-    {
-      while(1)
+	while(1)
 	{
-	  prompt();
-	  signal(SIGINT, handler_function);
-	}   
-    }
+		prompt();
+		signal(SIGINT, handler_function);
+	}
 }
