@@ -5,7 +5,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <unistd.h>
-
+ 
 char *show_input(void);
 void prompt(void);
 char *_strcat(char *src);
