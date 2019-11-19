@@ -200,10 +200,10 @@ void prompt(void)
 
 					identify_string(text);
 
-		if (execve(argv[0], argv, NULL) == -1)
-		{
-		perror("Error:");
-		}
+						if (execve(argv[0], argv, NULL) == -1)
+						{
+							perror("Error:");
+						}
 					}
 		else
 		{

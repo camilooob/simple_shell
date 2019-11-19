@@ -100,7 +100,7 @@ int _strcmp(char *cmd)
 	int i = 0;
 	char *s1 = "/bin/";
 
-		for ( ; (*s1 && (*s1 == *cmd)) ; s1++, cmd++, i++)
+	for ( ; (*s1 && (*s1 == *cmd)) ; s1++, cmd++, i++)
 		{
 			if (i == 4)
 				break;
@@ -110,7 +110,7 @@ int _strcmp(char *cmd)
 
 /**
  * execute_proc - similar to puts in C
- * @cmd: a pointer the integer we want to set to 402
+ * @str: a pointer the integer we want to set to 402
  *
  * Return: int
  */
@@ -121,13 +121,13 @@ void execute_proc(char **cmd)
 	char *parametro = *(cmd + 1);
 	char *s;
 
-		if (compara != 0)
+	if (compara != 0)
 		{
 			s = str_concat("/bin/", *cmd);
 			char *argv[] = {s, parametro, ".", NULL};
 
 			place(parametro);
-				if (execve(argv[0], argv, NULL) == -1)
+			if (execve(argv[0], argv, NULL) == -1)
 				{
 					perror("Error:");
 				}
@@ -135,18 +135,16 @@ void execute_proc(char **cmd)
 	else
 		{
 			char *argv[] = {*cmd, parametro, ".", NULL};
-
 			place(parametro);
-				if (execve(argv[0], argv, NULL) == -1)
+			if (execve(argv[0], argv, NULL) == -1)
 				{
 					perror("Error:");
 				}
 		}
 }
 /**
- * identify_string - identyfy keyboard input.
- * @parameter: call prompt from another function (prompt)
- * Return: str
+ * call prompt from another function (prompt)
+ *
  **/
 char **identify_string(char *parameter)
 {
@@ -155,7 +153,7 @@ char **identify_string(char *parameter)
 	int i = 0;
 
 	split = strtok(parameter, " \t\r\n\a");
-		while (split != NULL)
+	while (split != NULL)
 	/* This is to save the text in getline to a buffer  */
 		{
 			/*PENDIENTE: eliminar espacio en blanco */
@@ -168,12 +166,12 @@ char **identify_string(char *parameter)
 	return (buf);
 }
 /**
- * prompt - call prompt from another function (prompt)
+ * call prompt from another function (prompt)
  *
  **/
 void prompt(void)
 {
-		for (;;)
+	for (;;)
 		{
 			char *s;
 			pid_t child_pid;
@@ -187,44 +185,39 @@ void prompt(void)
 			getline(&text, &bufsize, stdin);
 			child_pid = fork();
 
-				if (child_pid == -1)
+			if (child_pid == -1)
 				{
 					perror("Error:");
 				}
 
-					if (child_pid == 0)
-					{
+			if (child_pid == 0)
+				{
 					s = str_concat("/bin/", text);
 
 					char *argv[] = {s, ".", NULL};
 
 					identify_string(text);
 
-		if (execve(argv[0], argv, NULL) == -1)
-		{
-		perror("Error:");
-		}
-					}
-		else
-		{
-		wait(&status);
-		}
+					if (execve(argv[0], argv, NULL) == -1)
+
+						{
+							perror("Error:");
+						}
+				}
+			else
+				{
+					wait(&status);
+				}
 		}
 }
-/**
-* INThandler - avoid close the shell
-* @sig: keep going shell
-**/
 void  INThandler(int sig)
 {
 	(void) sig;
 	write(1, "\n$ ", 3);
 }
 /**
- * main - func with infinite loop
- * @ac: No use
- * @av: No use
- * Return: loop.
+ * main func with infinite loop
+ *
  **/
 int main(int ac, char **av)
 {

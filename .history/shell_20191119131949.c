@@ -100,7 +100,7 @@ int _strcmp(char *cmd)
 	int i = 0;
 	char *s1 = "/bin/";
 
-		for ( ; (*s1 && (*s1 == *cmd)) ; s1++, cmd++, i++)
+	for ( ; (*s1 && (*s1 == *cmd)) ; s1++, cmd++, i++)
 		{
 			if (i == 4)
 				break;
@@ -121,13 +121,13 @@ void execute_proc(char **cmd)
 	char *parametro = *(cmd + 1);
 	char *s;
 
-		if (compara != 0)
+	if (compara != 0)
 		{
 			s = str_concat("/bin/", *cmd);
 			char *argv[] = {s, parametro, ".", NULL};
 
 			place(parametro);
-				if (execve(argv[0], argv, NULL) == -1)
+			if (execve(argv[0], argv, NULL) == -1)
 				{
 					perror("Error:");
 				}
@@ -135,9 +135,8 @@ void execute_proc(char **cmd)
 	else
 		{
 			char *argv[] = {*cmd, parametro, ".", NULL};
-
 			place(parametro);
-				if (execve(argv[0], argv, NULL) == -1)
+			if (execve(argv[0], argv, NULL) == -1)
 				{
 					perror("Error:");
 				}
@@ -155,7 +154,7 @@ char **identify_string(char *parameter)
 	int i = 0;
 
 	split = strtok(parameter, " \t\r\n\a");
-		while (split != NULL)
+	while (split != NULL)
 	/* This is to save the text in getline to a buffer  */
 		{
 			/*PENDIENTE: eliminar espacio en blanco */
@@ -173,7 +172,7 @@ char **identify_string(char *parameter)
  **/
 void prompt(void)
 {
-		for (;;)
+	for (;;)
 		{
 			char *s;
 			pid_t child_pid;
@@ -187,28 +186,28 @@ void prompt(void)
 			getline(&text, &bufsize, stdin);
 			child_pid = fork();
 
-				if (child_pid == -1)
+			if (child_pid == -1)
 				{
 					perror("Error:");
 				}
 
-					if (child_pid == 0)
-					{
+			if (child_pid == 0)
+				{
 					s = str_concat("/bin/", text);
 
 					char *argv[] = {s, ".", NULL};
 
 					identify_string(text);
 
-		if (execve(argv[0], argv, NULL) == -1)
-		{
-		perror("Error:");
-		}
-					}
-		else
-		{
-		wait(&status);
-		}
+					if (execve(argv[0], argv, NULL) == -1)
+						{
+							perror("Error:");
+						}
+				}
+			else
+				{
+					wait(&status);
+				}
 		}
 }
 /**
