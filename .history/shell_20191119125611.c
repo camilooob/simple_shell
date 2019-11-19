@@ -129,7 +129,7 @@ void execute_proc(char **cmd)
 
 			s = str_concat("/bin/", *cmd);
 			char *argv[] = {s, parametro, ".", NULL};
-			place (parametro);
+			place(parametro);
 			if (execve(argv[0], argv, NULL) == -1)
 				{
 					perror("Error:");
@@ -160,7 +160,7 @@ char **identify_string(char *parameter)
 	split = strtok(parameter, " \t\r\n\a");
 	while (split != NULL)/* This is to save the text in getline to a buffer  */
 		{
-			/*PENDIENTE: eliminar espacio en blanco */
+			/*PENDIENTE: eliminar espacio en blanco y hacer que guarde la vaina separado*/
 			buf[i] = split;
 			i++;
 

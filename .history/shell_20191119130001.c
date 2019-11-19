@@ -160,7 +160,7 @@ char **identify_string(char *parameter)
 	split = strtok(parameter, " \t\r\n\a");
 	while (split != NULL)/* This is to save the text in getline to a buffer  */
 		{
-			/*PENDIENTE: eliminar espacio en blanco */
+			/*PENDIENTE: eliminar espacio en blanco y hacer que guarde la vaina separado*/
 			buf[i] = split;
 			i++;
 

@@ -62,34 +62,34 @@ int _strlen(char *str)
  */
 char *str_concat(char *s1, char *s2)
 {
-	char *a;
-	int lens1, lens2, j, i, e;
+    char *a;
+    int lens1, lens2, j, i, e;
 
-	if (s1 == NULL)
-		s1 = "";
+    if (s1 == NULL)
+        s1 = "";
 
-	if (s2 == NULL)
-		s2 = "";
+    if (s2 == NULL)
+        s2 = "";
 
-	lens1 = _strlen(s1);
+    lens1 = _strlen(s1);
 
-	lens2 = _strlen(s2);
+    lens2 = _strlen(s2);
 
-	a = malloc(((lens1) + (lens2) + 1) * sizeof(char));
+    a = malloc(((lens1) + (lens2) + 1) * sizeof(char));
 
-	if (a == NULL)
-		return (NULL);
+    if (a == NULL)
+        return (NULL);
 
-	for (j = 0; j < lens1; j++)
-	{
-		a[j] = s1[j];
-	}
+    for (j = 0; j < lens1; j++)
+    {
+        a[j] = s1[j];
+    }
 
-	for (i = lens1, e = 0; e <= lens2; i++, e++)
-	{
-		a[i] = s2[e];
-	}
-	return (a);
+    for (i = lens1, e = 0; e <= lens2; i++, e++)
+    {
+        a[i] = s2[e];
+    }
+    return (a);
 }
 /**
  * _strcmp - a function that compares two strings.
@@ -103,7 +103,7 @@ int _strcmp(char *cmd)
 	int i = 0;
 	char *s1 = "/bin/";
 
-	for ( ; (*s1 && (*s1 == *cmd)) ; s1++, cmd++, i++)
+	for(;(*s1 &&(*s1 == *cmd));s1++, cmd++, i++)
 		{
 			if (i == 4)
 				break;
@@ -129,7 +129,7 @@ void execute_proc(char **cmd)
 
 			s = str_concat("/bin/", *cmd);
 			char *argv[] = {s, parametro, ".", NULL};
-			place (parametro);
+			place(parametro);
 			if (execve(argv[0], argv, NULL) == -1)
 				{
 					perror("Error:");
@@ -138,7 +138,7 @@ void execute_proc(char **cmd)
 	else
 		{
 			char *argv[] = {*cmd, parametro, ".", NULL};
-			place (parametro);
+			place(parametro);
 			if (execve(argv[0], argv, NULL) == -1)
 				{
 					perror("Error:");
@@ -152,7 +152,7 @@ void execute_proc(char **cmd)
  **/
 char **identify_string(char *parameter)
 {
-	char **buf = malloc(1024 * sizeof(char *));
+	char **buf = malloc(1024 * sizeof(char*));
 	char *split;
 
 	int i = 0;
@@ -160,7 +160,7 @@ char **identify_string(char *parameter)
 	split = strtok(parameter, " \t\r\n\a");
 	while (split != NULL)/* This is to save the text in getline to a buffer  */
 		{
-			/*PENDIENTE: eliminar espacio en blanco */
+			/*PENDIENTE: eliminar espacio en blanco y hacer que guarde la vaina separado*/
 			buf[i] = split;
 			i++;
 
@@ -173,7 +173,7 @@ char **identify_string(char *parameter)
  * call prompt from another function (prompt)
  *
  **/
-void prompt(void)
+void prompt()
 {
 	for (;;)
 		{
@@ -198,7 +198,7 @@ void prompt(void)
 					perror("Error:");
 				}
 
-			if (child_pid == 0)
+			if(child_pid == 0)
 				{
 					s = str_concat("/bin/", text);
 					char *argv[] = {s, ".", NULL};
@@ -236,7 +236,7 @@ void prompt(void)
 void  INThandler(int sig)
 {
 	(void) sig;
-	write (1, "\n$ ", 3);
+	write(1,"\n$ ", 3);
 }
 
 /**
