@@ -181,10 +181,10 @@ void prompt()
 /*	char *text;*/
 
 			char *s;
-			char **pars;
+			/*char **pars;*/
 			pid_t child_pid;
 			int status;
-			int i = 0;
+			/*int i = 0;*/
 			char *text = NULL;
 			size_t bufsize = 0;
 			place("$ ");
@@ -202,16 +202,13 @@ void prompt()
 				{
 					s = str_concat("/bin/", text);
 					char *argv[] = {s, ".", NULL};
-					pars = identify_string(text);
+					/* pars = */identify_string(text);
 					if (execve(argv[0], argv, NULL) == -1)
 
 						{
 							perror("Error:");
 						}
-
-
 				}
-
 			else
 				{
 					wait(&status);
@@ -238,6 +235,7 @@ void prompt()
 
 void  INThandler(int sig)
 {
+	(void) sig;
 	write(1,"\n$ ", 3);
 }
 
@@ -247,16 +245,15 @@ void  INThandler(int sig)
  **/
 int main(int ac, char **av)
 {
-(void)ac;
-(void)*av;
+	(void)ac;
+	(void)*av;
 
-signal(SIGINT, INThandler);
+	signal(SIGINT, INThandler);
 
 
-///  while(1)
-//	{
-prompt();
-//  }
-return (0);
+
+	prompt();
+
+	return (0);
 
 }
