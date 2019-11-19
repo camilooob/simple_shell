@@ -91,27 +91,58 @@ char *str_concat(char *s1, char *s2)
     }
     return (a);
 }
+/**
+ * _strcmp - a function that compares two strings.
+ * @s1: first string
+ * @s2: second string
+ * Return: value of comparison
+ */
 
+int _strcmp(char *cmd)
+{
+    int i = 0;
+    char *s1 = "/bin/";
+
+for(;(*s1 &&(*s1 == *cmd));s1++, cmd++, i++)
+{
+    if (i == 4)
+   break;
+}
+    return (*(char *)s1 - *(char *)cmd);
+}
 /**
  * execute_proc - similar to puts in C
  * @str: a pointer the integer we want to set to 402
  *
  * Return: int
  */
+
 void execute_proc(char *cmd)
-{ 
-  char *s = str_concat("/bin/", cmd);
-  char *argv[] = {s, ".", NULL};
-  char *env[] = {s,NULL};
+{
+int compara = _strcmp(cmd);
+char *s;
 
-  execve(s, argv, env);
- 
-  
-  if (execve(argv[0], argv, NULL) == -1)
+if (compara != 0)
+{
+
+    s = str_concat("/bin/", cmd);
+    char *argv[] = {s, ".", NULL};
+   place(s); 
+    if (execve(argv[0], argv, NULL) == -1)
     {
-      perror("Error");
+    perror("Error:");
     }
-
+   
+}
+else 
+  {
+    char *argv[] = {cmd, ".", NULL};
+    place(cmd);
+    if (execve(argv[0], argv, NULL) == -1)
+    {
+    perror("Error:");
+    }
+  }
   
 }
 
@@ -124,7 +155,7 @@ char **identify_string(char *parameter)
 	char **buf = malloc(1024 * sizeof(char*));
 	char *split;
 
-	int i = 0, j = 1;
+	int i = 0;
 
 	split = strtok(parameter, " \t\r\n\a");
 
@@ -137,15 +168,6 @@ char **identify_string(char *parameter)
 	  split = strtok(NULL, " ");
 	}
 
-	
-
-	/*while(buf[j] != NULL) This will run through the array of words in buf and print them 
-	{
-	  place(*(buf + j));
-	  charput('\n');
-	  j++;
-	}*/
-	
 	execute_proc(*(buf));
 	return (buf);
 }
@@ -153,58 +175,93 @@ char **identify_string(char *parameter)
  * call prompt from another function (prompt)
  *
  **/
-void prompt(void)
+void prompt()
 {
-	char *text;
-	char **pars;
+    for (;;)
+    {
+    
+/*	char *text;*/
+  
+  
+    char *s;
+	char **pars; 
+    pid_t child_pid;
+    int status;
+    int i = 0; 
+    char *text = NULL;
+	size_t bufsize = 0;   
+	place("$ ");
+    getline(&text, &bufsize, stdin);
+/*PENDIENTE FORK: QUE NO SE SALGA DE LA CONSOLA AL TERMINAR DE DE EJECUTAR ALGUN COMANDO.*/
+/*execute_proc(text);*/
+    child_pid = fork();
+
+    if (child_pid == -1)
+    {
+        perror("Error:");
+    }
+   
+    if(child_pid == 0)
+    {
+        place("soy hijo");
         
-	    text = show_input();
-	    pars = identify_string(text);
+    s = str_concat("/bin/", text);
+char *argv[] = {s, ".", NULL};
+pars = identify_string(text);
+if (execve(argv[0], argv, NULL) == -1)
 
+    {
+        perror("Error:");
+    }
+  
+
+    }
+
+    else
+    {
+        wait(&status);
+    /*      place("soy papa");
+        text = show_input();
+        pars = identify_string(text);
+*/
+    }
+    }
 }
-
 /**
  * display prompt with getline
  *
- **/
+ *
 char *show_input(void)
 {
-	char *text = NULL, *get;
-	ssize_t bufsize = 0;
-    while(1)
-    {
+    char *text = NULL;
+	size_t bufsize = 0;   
 	place("$ ");
 	getline(&text, &bufsize, stdin);
+   return (text);
+    
+    }*/
 
-	return (text);
-    }
-    }
-
-void handler_function()
+void  INThandler(int sig)
 {
-
-
+          write(1,"\n$ ", 3);
 }
+
 /**
  * main func with infinite loop
  *
  **/
-void main(int ac, char **av)
+int main(int ac, char **av)
 {
-  pid_t my_pid;
-  pid_t pid;
+(void)ac;
+(void)*av;
+
+    signal(SIGINT, INThandler);
   
-  pid = fork();
-  if(pid == -1)
-    {
-      perror("Error:");
-    }
-  else if(pid == 0)
-    {
-      while(1)
-	{
-	  prompt();
-	  signal(SIGINT, handler_function);
-	}   
-    }
+
+ ///  while(1)
+//	{
+        prompt();
+  //  }
+return (0);
+
 }
