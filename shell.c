@@ -5,11 +5,142 @@
 #include <string.h>
 #include <ctype.h>
 #include <unistd.h>
-
+#include <dirent.h>
 char *show_input(void);
 void prompt(void);
 char *_strcat(char *src);
 int _strlen(char *str);
+void place(char *str);
+
+/**
+ *
+ *
+ **/
+int _strcmpdir(char *s1, char *s2)
+{
+	for (; (*s2 != '\0' && *s1 != '\0') && *s1 == *s2; s1++)
+	{
+		s2++;
+	}
+
+	return (*s1 - *s2);
+}
+
+/**
+ *
+ *
+ **/
+int findfile(char *command)
+{
+    DIR *folder;
+    struct dirent *entry;
+    int files = 0;
+    char *cmd, comp;
+
+
+
+    folder = opendir("/bin/");
+    if(folder == NULL)
+    {
+        perror("Unable to read directory");
+        return(1);
+    }
+
+    while( (entry=readdir(folder)) )
+	    {
+		    cmd = entry->d_name;
+
+		    comp = _strcmpdir(cmd, command);
+		    place("four");
+		    if(comp == 0)
+			    return(4);
+	    }
+
+
+     folder = opendir("/usr/local/sbin/");
+     while( (entry=readdir(folder)) )
+	    {
+		    cmd = entry->d_name;
+		    comp = _strcmpdir(cmd, command);
+		    place("five");
+		    if(comp == 0)
+			    return(5);
+	    }
+
+    /*folder = opendir("/usr/local/bin");
+    while( (entry=readdir(folder)) )
+	    {
+		    cmd = entry->d_name;
+		    comp = _strcmpdir(cmd, command);
+
+		    if(comp == 0)
+			    return(6);
+			    }*/
+
+    folder = opendir("/usr/sbin");
+    while( (entry=readdir(folder)) )
+	    {
+		    cmd = entry->d_name;
+		    comp = _strcmpdir(cmd, command);
+		    place("seven");
+		    if(comp == 0)
+			    return(7);
+	    }
+
+    folder = opendir("/usr/bin/");
+    while( (entry=readdir(folder)) )
+	    {
+		    cmd = entry->d_name;
+		    comp = _strcmpdir(cmd, command);
+		    place("eight");
+		    if(comp == 0)
+			    return(8);
+	    }
+
+    folder = opendir("/sbin/");
+    while( (entry=readdir(folder)) )
+	    {
+		    cmd = entry->d_name;
+		    comp = _strcmpdir(cmd, command);
+		    place("nine");
+		    if(comp == 0)
+			    return(9);
+	    }
+
+    /*folder = opendir("/usr/games");
+    while( (entry=readdir(folder)) )
+	    {
+		    cmd = entry->d_name;
+		    comp = _strcmpdir(cmd, command);
+
+		    if(comp == 0)
+			    return(10);
+			    }
+
+    folder = opendir("/usr/local/games");
+    while( (entry=readdir(folder)) )
+	    {
+		    cmd = entry->d_name;
+		    comp = _strcmpdir(cmd, command);
+
+		    if(comp == 0)
+			    return(11);
+			    }
+
+    folder = opendir("/snap/bin");
+    while( (entry=readdir(folder)) )
+	    {
+		    cmd = entry->d_name;
+		    comp = _strcmpdir(cmd, command);
+
+		    if(comp == 0)
+			    return(12);
+			    }*/
+
+    closedir(folder);
+
+    return(0);
+}
 
 /**
  * charput - writes the character like putchar
@@ -109,40 +240,76 @@ int _strcmp(char *cmd)
 }
 
 /**
+ *
+ *
+ *
+ **/
+char *driver(char **cmd)
+{
+	char *s;
+
+	switch(findfile(*cmd))
+		{
+		case 4:
+			s = str_concat("/bin/", *cmd);
+			break;
+		case 5:
+			s = str_concat("/usr/local/sbin/", *cmd);
+			break;
+		case 7:
+			s = str_concat("/usr/sbin", *cmd);
+			break;
+		case 8:
+			s = str_concat("/usr/bin/", *cmd);
+			break;
+		case 9:
+			s = str_concat("/sbin/", *cmd);
+			break;
+		default:
+			perror("Error");
+		}
+
+
+	return(s);
+
+}
+
+
+/**
  * execute_proc - similar to puts in C
  * @cmd: a pointer the integer we want to set to 402
  *
  * Return: int
  */
-
 void execute_proc(char **cmd)
 {
 	int compara = _strcmp(*cmd);
 	char *parametro = *(cmd + 1);
 	char *s;
+	int n;
 
-		if (compara != 0)
+	if (compara != '0')
 		{
-			s = str_concat("/bin/", *cmd);
+			s = driver(cmd);
 			char *argv[] = {s, parametro, ".", NULL};
 
-			place(parametro);
 				if (execve(argv[0], argv, NULL) == -1)
 				{
 					perror("Error:");
 				}
 		}
-	else
-		{
-			char *argv[] = {*cmd, parametro, ".", NULL};
+		else
+			{
 
-			place(parametro);
+				char *argv[] = {*cmd, parametro, ".", NULL};
+
 				if (execve(argv[0], argv, NULL) == -1)
-				{
-					perror("Error:");
-				}
-		}
+					{
+						perror("Error:");
+					}
+			}
 }
+
 /**
  * identify_string - identyfy keyboard input.
  * @parameter: call prompt from another function (prompt)
@@ -155,10 +322,9 @@ char **identify_string(char *parameter)
 	int i = 0;
 
 	split = strtok(parameter, " \t\r\n\a");
-		while (split != NULL)
-	/* This is to save the text in getline to a buffer  */
+	while (split != NULL)
+
 		{
-			/*PENDIENTE: eliminar espacio en blanco */
 			buf[i] = split;
 			i++;
 
@@ -167,6 +333,7 @@ char **identify_string(char *parameter)
 	execute_proc(buf);
 	return (buf);
 }
+
 /**
  * prompt - call prompt from another function (prompt)
  *
@@ -177,38 +344,42 @@ void prompt(void)
 		{
 			char *s;
 			pid_t child_pid;
-			int status;
+			int status, lenbuf;
 			char *text = NULL;
 
 			size_t bufsize = 0;
 
 			place("$ ");
 
-			getline(&text, &bufsize, stdin);
+			lenbuf = getline(&text, &bufsize, stdin);
 			child_pid = fork();
 
-				if (child_pid == -1)
+			if (lenbuf == -1)
+				exit(98);
+
+			if (child_pid == -1)
 				{
 					perror("Error:");
 				}
 
-					if (child_pid == 0)
-					{
-					s = str_concat("/bin/", text);
+			if (child_pid == 0)
+				{
+					/*s = str_concat("/bin/", text);*/
+
 
 					char *argv[] = {s, ".", NULL};
 
 					identify_string(text);
 
-		if (execve(argv[0], argv, NULL) == -1)
-		{
-		perror("Error:");
-		}
-					}
-		else
-		{
-		wait(&status);
-		}
+					if (execve(argv[0], argv, NULL) == -1)
+						{
+							perror("Error:");
+						}
+				}
+			else
+				{
+					wait(&status);
+				}
 		}
 }
 /**
@@ -219,6 +390,7 @@ void  INThandler(int sig)
 {
 	(void) sig;
 	write(1, "\n$ ", 3);
+	return;
 }
 /**
  * main - func with infinite loop
@@ -226,11 +398,11 @@ void  INThandler(int sig)
  * @av: No use
  * Return: loop.
  **/
-int main(int ac, char **av)
+int main(int ac, char **av, char *env[])
 {
 	(void)ac;
 	(void)*av;
 	signal(SIGINT, INThandler);
-	prompt();
+        prompt();
 	return (0);
 }
