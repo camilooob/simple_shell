@@ -34,9 +34,9 @@ int main(int ac, char **av, char **env)
 			if(!(_strcmpdir(*environ, "PATH")))
 				{
 					*str = *environ;
-					for (int i = 0;i < 20;i++, split++, str++)
+					for (int i = 0;i < 9;i++, split++, str++)
 						{
-									*split = strtok(*str, ":");
+									*split = strtok(*str, ":='PATH'");
 							printf("%s : en POSICION -> %d \n", *split,i);
 						}
 
