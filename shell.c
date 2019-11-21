@@ -6,11 +6,14 @@
 #include <ctype.h>
 #include <unistd.h>
 #include <dirent.h>
+
 char *show_input(void);
 void prompt(void);
 char *_strcat(char *src);
 int _strlen(char *str);
 void place(char *str);
+char *findfile(char *command);
+char *find_command(char *command);
 
 /**
  *
@@ -18,10 +21,15 @@ void place(char *str);
  **/
 int _strcmpdir(char *s1, char *s2)
 {
+	int i = 0;
+
 	for (; (*s2 != '\0' && *s1 != '\0') && *s1 == *s2; s1++)
-	{
-		s2++;
-	}
+		{
+			if (i == 3)
+				break;
+			i++;
+			s2++;
+		}
 
 	return (*s1 - *s2);
 }
@@ -30,116 +38,53 @@ int _strcmpdir(char *s1, char *s2)
  *
  *
  **/
-int findfile(char *command)
+char *find_command(char *command)
 {
-    DIR *folder;
-    struct dirent *entry;
-    int files = 0;
-    char *cmd, comp;
+	DIR *folder;
+	struct dirent *entry;
+	int files = 0;
+	char *cmd, comp;
+
+	char **str  = malloc(sizeof(char)*1024);
+	extern char **environ;
+	char **split = malloc(sizeof(char)*1024);
+	int i = 0;
+	char **ptr = malloc(sizeof(char)*1024);
+
+	while(*environ != NULL)
+		{
+			if(!(_strcmpdir(*environ, "PATH")))
+				{
+					*str = *environ;
+					for (int i = 0;i < 9;i++, split++, str++, ptr++)
+						{
+							*split = strtok(*str, ":='PATH'");
+
+							folder = opendir(*split);
+
+							if(folder == NULL)
+								{
+									perror("Unable to read directory");
+								}
+
+							while((entry=readdir(folder)))
+								{
+									cmd = entry->d_name;
+									comp = _strcmpdir(cmd, command);
+
+									if(comp == 0)
+										{
+											return(*split);
+										}
+								}
+						}
 
 
+				}
+		environ++;
+		}
 
-    folder = opendir("/bin/");
-    if(folder == NULL)
-    {
-        perror("Unable to read directory");
-        return(1);
-    }
-
-    while( (entry=readdir(folder)) )
-	    {
-		    cmd = entry->d_name;
-
-		    comp = _strcmpdir(cmd, command);
-		    place("four");
-		    if(comp == 0)
-			    return(4);
-	    }
-
-
-     folder = opendir("/usr/local/sbin/");
-     while( (entry=readdir(folder)) )
-	    {
-		    cmd = entry->d_name;
-		    comp = _strcmpdir(cmd, command);
-		    place("five");
-		    if(comp == 0)
-			    return(5);
-	    }
-
-    /*folder = opendir("/usr/local/bin");
-    while( (entry=readdir(folder)) )
-	    {
-		    cmd = entry->d_name;
-		    comp = _strcmpdir(cmd, command);
-
-		    if(comp == 0)
-			    return(6);
-			    }*/
-
-    folder = opendir("/usr/sbin");
-    while( (entry=readdir(folder)) )
-	    {
-		    cmd = entry->d_name;
-		    comp = _strcmpdir(cmd, command);
-		    place("seven");
-		    if(comp == 0)
-			    return(7);
-	    }
-
-    folder = opendir("/usr/bin/");
-    while( (entry=readdir(folder)) )
-	    {
-		    cmd = entry->d_name;
-		    comp = _strcmpdir(cmd, command);
-		    place("eight");
-		    if(comp == 0)
-			    return(8);
-	    }
-
-    folder = opendir("/sbin/");
-    while( (entry=readdir(folder)) )
-	    {
-		    cmd = entry->d_name;
-		    comp = _strcmpdir(cmd, command);
-		    place("nine");
-		    if(comp == 0)
-			    return(9);
-	    }
-
-    /*folder = opendir("/usr/games");
-    while( (entry=readdir(folder)) )
-	    {
-		    cmd = entry->d_name;
-		    comp = _strcmpdir(cmd, command);
-
-		    if(comp == 0)
-			    return(10);
-			    }
-
-    folder = opendir("/usr/local/games");
-    while( (entry=readdir(folder)) )
-	    {
-		    cmd = entry->d_name;
-		    comp = _strcmpdir(cmd, command);
-
-		    if(comp == 0)
-			    return(11);
-			    }
-
-    folder = opendir("/snap/bin");
-    while( (entry=readdir(folder)) )
-	    {
-		    cmd = entry->d_name;
-		    comp = _strcmpdir(cmd, command);
-
-		    if(comp == 0)
-			    return(12);
-			    }*/
-
-    closedir(folder);
-
-    return(0);
+	return("NO ESTA IMPRIMIENDO LA DIRECCION");
 }
 
 /**
@@ -243,27 +188,15 @@ int _strcmp(char *cmd)
  *
  *
  *
- **/
+ *
 char *driver(char **cmd)
 {
 	char *s;
 
 	switch(findfile(*cmd))
 		{
-		case 4:
-			s = str_concat("/bin/", *cmd);
-			break;
-		case 5:
-			s = str_concat("/usr/local/sbin/", *cmd);
-			break;
-		case 7:
-			s = str_concat("/usr/sbin", *cmd);
-			break;
-		case 8:
-			s = str_concat("/usr/bin/", *cmd);
-			break;
-		case 9:
-			s = str_concat("/sbin/", *cmd);
+		case 0:
+			s = str_concat("", *cmd);
 			break;
 		default:
 			perror("Error");
@@ -272,7 +205,7 @@ char *driver(char **cmd)
 
 	return(s);
 
-}
+	}*/
 
 
 /**
@@ -285,12 +218,27 @@ void execute_proc(char **cmd)
 {
 	int compara = _strcmp(*cmd);
 	char *parametro = *(cmd + 1);
-	char *s;
+	char *s, *slash = "/";
 	int n;
+	char *o;
+	char *vartoprint = *cmd;
+
+	o = find_command(vartoprint);
+	place("Esto es o: ");
+	place(o);
+	place("\n");
+
 
 	if (compara != '0')
 		{
-			s = driver(cmd);
+			slash = str_concat(o,slash);
+
+			s = str_concat(slash,*cmd);
+			place("Esto es s: ");
+			place(s);
+			place("\n");
+
+
 			char *argv[] = {s, parametro, ".", NULL};
 
 				if (execve(argv[0], argv, NULL) == -1)
@@ -402,6 +350,7 @@ int main(int ac, char **av, char *env[])
 {
 	(void)ac;
 	(void)*av;
+
 	signal(SIGINT, INThandler);
         prompt();
 	return (0);
