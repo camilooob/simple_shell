@@ -46,30 +46,46 @@ int _strcmpdir(char *s1, char *s2)
 
 
 
-int main(int ac, char **av, char **env)
+char *find_command(char *command)
 {
 	DIR *folder;
 	struct dirent *entry;
 	int files = 0;
 	char *cmd, comp;
 
-
-	char *buf = malloc(sizeof(char)*1024);
-	char **str = malloc(sizeof(char)*1024);
+	char **str  = malloc(sizeof(char)*1024);
 	extern char **environ;
 	char **split = malloc(sizeof(char)*1024);
 	int i = 0;
+	char **ptr = malloc(sizeof(char)*1024);
 
 	while(*environ != NULL)
 		{
 			if(!(_strcmpdir(*environ, "PATH")))
 				{
 					*str = *environ;
-					for (int i = 0;i < 9;i++, split++, str++)
+					for (int i = 0;i < 9;i++, split++, str++, ptr++)
 						{
 							*split = strtok(*str, ":='PATH'");
-							place(*split);
-							place("\n");
+
+							folder = opendir(*split);
+
+							if(folder == NULL)
+								{
+									perror("Unable to read directory");
+								}
+
+							while((entry=readdir(folder)))
+								{
+									cmd = entry->d_name;
+									comp = _strcmpdir(cmd, "adduser");
+
+									if(comp == 0)
+										{
+/* printf("%s",entry->d_name); */
+									return(entry->d_name);
+										}
+								}
 						}
 
 
@@ -77,39 +93,5 @@ int main(int ac, char **av, char **env)
 		environ++;
 		}
 
-
-	while(split != NULL)
-		{
-			place("secondWhile");
-			place("\n");
-
-			folder = opendir(*split);
-
-
-			if(folder == NULL)
-				{
-					perror("Unable to read directory");
-
-				}
-
-			entry=readdir(folder);
-
-			int i = 0;
-			while(i < 5)
-				{
-					place("Fourth While");
-
-					cmd = entry->d_name;
-
-					comp = _strcmpdir(cmd, "ls");
-
-                                          if(comp == 0)
-                                                  printf("%s",entry->d_name);
-
-					  i++;
-				}
-			split++;
-		}
-
-return(0);
+return("1");
 }
