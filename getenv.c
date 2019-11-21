@@ -1,8 +1,33 @@
+#include <sys/wait.h>
+#include <sys/types.h>
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include <unistd.h>
+#include <dirent.h>
+
 
 int _strcmpdir(char *s1, char *s2);
+void place(char *str);
+int charput(char c);
+
+void place(char *str)
+{
+	while (*str != '\0')
+		{
+			charput(*str);
+			str++;
+		}
+}
+
+
+int charput(char c)
+{
+         return (write(1, &c, 1));
+}
+
+
 
 int _strcmpdir(char *s1, char *s2)
 {
@@ -23,6 +48,12 @@ int _strcmpdir(char *s1, char *s2)
 
 int main(int ac, char **av, char **env)
 {
+	DIR *folder;
+	struct dirent *entry;
+	int files = 0;
+	char *cmd, comp;
+
+
 	char *buf = malloc(sizeof(char)*1024);
 	char **str = malloc(sizeof(char)*1024);
 	extern char **environ;
@@ -36,15 +67,49 @@ int main(int ac, char **av, char **env)
 					*str = *environ;
 					for (int i = 0;i < 9;i++, split++, str++)
 						{
-									*split = strtok(*str, ":='PATH'");
-							printf("%s : en POSICION -> %d \n", *split,i);
+							*split = strtok(*str, ":='PATH'");
+							place(*split);
+							place("\n");
 						}
 
-					return(0);
+
 				}
-			environ++;
+		environ++;
 		}
 
 
-	return(0);
+	while(split != NULL)
+		{
+			place("secondWhile");
+			place("\n");
+
+			folder = opendir(*split);
+
+
+			if(folder == NULL)
+				{
+					perror("Unable to read directory");
+
+				}
+
+			entry=readdir(folder);
+
+			int i = 0;
+			while(i < 5)
+				{
+					place("Fourth While");
+
+					cmd = entry->d_name;
+
+					comp = _strcmpdir(cmd, "ls");
+
+                                          if(comp == 0)
+                                                  printf("%s",entry->d_name);
+
+					  i++;
+				}
+			split++;
+		}
+
+return(0);
 }
