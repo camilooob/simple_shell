@@ -49,21 +49,19 @@ char *find_command(char *command)
 {
 	DIR *folder;
 	struct dirent *entry;
-	int files = 0;
 	char *cmd, comp;
 
 	char **str  = malloc(sizeof(char)*1024);
 	extern char **environ;
 	char **split = malloc(sizeof(char)*1024);
-	int i = 0;
-	char **ptr = malloc(sizeof(char)*1024);
+	int i;
 
 	while(*environ != NULL)
 		{
 			if(!(_strcmpdir(*environ, "PATH")))
 				{
 					*str = *environ;
-					for (int i = 0;i < 9;i++, split++, str++, ptr++)
+					for (i = 0;i < 9;i++, split++, str++)
 						{
 							*split = strtok(*str, ":='PATH'");
 
@@ -183,13 +181,14 @@ char *str_concat(char *s1, char *s2)
 int _strcmp(char *cmd)
 {
 	int i = 0;
-	char *s1 = "/bin/";
+	char *s1 = "exit";
 
 		for ( ; (*s1 && (*s1 == *cmd)) ; s1++, cmd++, i++)
 		{
 			if (i == 4)
 				break;
 		}
+
 	return (*(char *)s1 - *(char *)cmd);
 }
 
@@ -204,25 +203,16 @@ void execute_proc(char **cmd)
 	int compara = _strcmp(*cmd);
 	char *parametro = *(cmd + 1);
 	char *s, *slash = "/";
-	int n;
 	char *o;
 	char *vartoprint = *cmd;
 
 	o = find_command(vartoprint);
-	place("Esto es o: ");
-	place(o);
-	place("\n");
-
 
 	if (compara != '0')
 		{
 			slash = str_concat(o,slash);
 
 			s = str_concat(slash,*cmd);
-			place("Esto es s: ");
-			place(s);
-			place("\n");
-
 
 			char *argv[] = {s, parametro, ".", NULL};
 
@@ -275,11 +265,10 @@ void prompt(void)
 {
 		for (;;)
 		{
-			char *s;
+			char *s = "";
 			pid_t child_pid;
 			int status, lenbuf;
 			char *text = NULL;
-
 			size_t bufsize = 0;
 
 			place("$ ");
@@ -313,6 +302,7 @@ void prompt(void)
 				}
 		}
 }
+
 /**
 * INThandler - avoid close the shell
 * @sig: keep going shell
@@ -323,13 +313,14 @@ void  INThandler(int sig)
 	write(1, "\n$ ", 3);
 	return;
 }
+
 /**
  * main - func with infinite loop
  * @ac: No use
  * @av: No use
  * Return: loop.
  **/
-int main(int ac, char **av, char *env[])
+int main(int ac, char **av)
 {
 	(void)ac;
 	(void)*av;
