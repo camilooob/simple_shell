@@ -185,30 +185,6 @@ int _strcmp(char *cmd)
 }
 
 /**
- *
- *
- *
- *
-char *driver(char **cmd)
-{
-	char *s;
-
-	switch(findfile(*cmd))
-		{
-		case 0:
-			s = str_concat("", *cmd);
-			break;
-		default:
-			perror("Error");
-		}
-
-
-	return(s);
-
-	}*/
-
-
-/**
  * execute_proc - similar to puts in C
  * @cmd: a pointer the integer we want to set to 402
  *
@@ -312,9 +288,6 @@ void prompt(void)
 
 			if (child_pid == 0)
 				{
-					/*s = str_concat("/bin/", text);*/
-
-
 					char *argv[] = {s, ".", NULL};
 
 					identify_string(text);
@@ -323,6 +296,7 @@ void prompt(void)
 						{
 							perror("Error:");
 						}
+					exit(0);
 				}
 			else
 				{
