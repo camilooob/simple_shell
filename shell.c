@@ -81,6 +81,10 @@ char *find_command(char *command)
 										{
 											return(*split);
 										}
+									else
+										{
+											perror("Error");
+										}
 								}
 						}
 
@@ -173,23 +177,22 @@ char *str_concat(char *s1, char *s2)
 }
 
 /**
- * _strcmp - a function that compares two strings.
+ * lookforslash - identifies if first char is a slash.
  * @cmd: first string
- * Return: value of comparison
+ * Return: 1 if yes 0 if no.
  */
-
-int _strcmp(char *cmd)
+int lookforslash(char *cmd)
 {
-	int i = 0;
-	char *s1 = "exit";
+	int cont = 0;
 
-		for ( ; (*s1 && (*s1 == *cmd)) ; s1++, cmd++, i++)
-		{
-			if (i == 4)
-				break;
-		}
+	while (cmd[cont])
+	{
+		if (cmd[cont] == '/')
+			return (1);
 
-	return (*(char *)s1 - *(char *)cmd);
+		cont++;
+	}
+	return (0);
 }
 
 /**
@@ -200,15 +203,15 @@ int _strcmp(char *cmd)
  */
 void execute_proc(char **cmd)
 {
-	int compara = _strcmp(*cmd);
-	char *parametro = *(cmd + 1);
+	int compara = lookforslash(*cmd);
+	char *parametro = (*(cmd + 1));
 	char *s, *slash = "/";
 	char *o;
 	char *vartoprint = *cmd;
 
 	o = find_command(vartoprint);
 
-	if (compara != '0')
+	if (compara == 0)
 		{
 			slash = str_concat(o,slash);
 
@@ -218,7 +221,7 @@ void execute_proc(char **cmd)
 
 				if (execve(argv[0], argv, NULL) == -1)
 				{
-					perror("Error:");
+					perror("Error");
 				}
 		}
 		else
@@ -228,7 +231,7 @@ void execute_proc(char **cmd)
 
 				if (execve(argv[0], argv, NULL) == -1)
 					{
-						perror("Error:");
+						perror("Error");
 					}
 			}
 }
@@ -246,13 +249,14 @@ char **identify_string(char *parameter)
 
 	split = strtok(parameter, " \t\r\n\a");
 	while (split != NULL)
-
 		{
 			buf[i] = split;
+
 			i++;
 
 			split = strtok(NULL, " ");
 		}
+
 	execute_proc(buf);
 	return (buf);
 }
@@ -281,7 +285,7 @@ void prompt(void)
 
 			if (child_pid == -1)
 				{
-					perror("Error:");
+					perror("Error");
 				}
 
 			if (child_pid == 0)
@@ -292,7 +296,7 @@ void prompt(void)
 
 					if (execve(argv[0], argv, NULL) == -1)
 						{
-							perror("Error:");
+							place("");
 						}
 					exit(0);
 				}
@@ -304,10 +308,10 @@ void prompt(void)
 }
 
 /**
-* INThandler - avoid close the shell
+* controlC - avoid close the shell
 * @sig: keep going shell
 **/
-void  INThandler(int sig)
+void  controlC(int sig)
 {
 	(void) sig;
 	write(1, "\n$ ", 3);
@@ -325,7 +329,7 @@ int main(int ac, char **av)
 	(void)ac;
 	(void)*av;
 
-	signal(SIGINT, INThandler);
+	signal(SIGINT, controlC);
         prompt();
 	return (0);
 }
