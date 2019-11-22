@@ -16,8 +16,12 @@ char *findfile(char *command);
 char *find_command(char *command);
 
 /**
+ * _strcmpdir - compares strings to find dir.
  *
+ * @s1: string.
+ * @s2: string.
  *
+ * Return - returns  0 if match and any other number if otherwise.
  **/
 int _strcmpdir(char *s1, char *s2)
 {
@@ -35,8 +39,11 @@ int _strcmpdir(char *s1, char *s2)
 }
 
 /**
+ * find_command - finds command to execute in path routes.
  *
+ * @command: first position of getline input.
  *
+ * Return - string of folder for command to be executed.
  **/
 char *find_command(char *command)
 {
@@ -84,7 +91,7 @@ char *find_command(char *command)
 		environ++;
 		}
 
-	return("NO ESTA IMPRIMIENDO LA DIRECCION");
+	return("Error: Not Found");
 }
 
 /**
@@ -98,6 +105,7 @@ int charput(char c)
 {
 	return (write(1, &c, 1));
 }
+
 /**
  * place - similar to puts in C
  * @str: a pointer the integer we want to set to 402
@@ -165,6 +173,7 @@ char *str_concat(char *s1, char *s2)
 	}
 	return (a);
 }
+
 /**
  * _strcmp - a function that compares two strings.
  * @cmd: first string
