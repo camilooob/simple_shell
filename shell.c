@@ -30,12 +30,12 @@ int _strcmpdir(char *s1, char *s2)
 	int i = 0;
 
 	for (; (*s2 != '\0' && *s1 != '\0') && *s1 == *s2; s1++)
-	{
+		{
 			if (i == 3)
 				break;
 			i++;
 			s2++;
-	}
+		}
 
 	return (*s1 - *s2);
 }
@@ -326,7 +326,7 @@ void prompt(void)
 				exit(98);
 
 			if (compareExit(text, "exit") == 0)
-				exit(98);
+				exit(0);
 
 			if (compareEnv(text, "env") == 0)
 				{
