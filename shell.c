@@ -14,6 +14,8 @@ int _strlen(char *str);
 void place(char *str);
 char *findfile(char *command);
 char *find_command(char *command);
+int compare(char *s1, char *s2);
+
 
 /**
  * _strcmpdir - compares strings to find dir.
@@ -28,12 +30,12 @@ int _strcmpdir(char *s1, char *s2)
 	int i = 0;
 
 	for (; (*s2 != '\0' && *s1 != '\0') && *s1 == *s2; s1++)
-		{
+	{
 			if (i == 3)
 				break;
 			i++;
 			s2++;
-		}
+	}
 
 	return (*s1 - *s2);
 }
@@ -51,49 +53,47 @@ char *find_command(char *command)
 	struct dirent *entry;
 	char *cmd, comp;
 
-	char **str  = malloc(sizeof(char)*1024);
+	char **str  = malloc(sizeof(char) * 1024);
 	extern char **environ;
-	char **split = malloc(sizeof(char)*1024);
+	char **split = malloc(sizeof(char) * 1024);
 	int i;
 
-	while(*environ != NULL)
+	while (*environ != NULL)
 		{
-			if(!(_strcmpdir(*environ, "PATH")))
+			if (!(_strcmpdir(*environ, "PATH")))
 				{
 					*str = *environ;
-					for (i = 0;i < 9;i++, split++, str++)
+					for (i = 0; i < 9; i++, split++, str++)
 						{
 							*split = strtok(*str, ":='PATH'");
 
 							folder = opendir(*split);
 
-							if(folder == NULL)
+							if (folder == NULL)
 								{
 									perror("Unable to read directory");
 								}
 
-							while((entry=readdir(folder)))
+							while ((entry = readdir(folder)))
 								{
 									cmd = entry->d_name;
 									comp = _strcmpdir(cmd, command);
 
-									if(comp == 0)
+									if (comp == 0)
 										{
-											return(*split);
+											return (*split);
 										}
-									else
+
+									if (cmd == NULL)
 										{
 											perror("Error");
 										}
 								}
 						}
-
-
 				}
-		environ++;
+			environ++;
 		}
-
-	return("Error: Not Found");
+	return ("Error: Not Found");
 }
 
 /**
@@ -196,6 +196,48 @@ int lookforslash(char *cmd)
 }
 
 /**
+ * compare - identifies if first char is a slash.
+ * @s1: first string
+ * @s2: exit string
+ * Return: 1 if yes 0 if no.
+ */
+int compareExit(char *s1, char *s2)
+{
+	int i = 0;
+
+	for (; (*s2 != '\0' && *s1 != '\0') && *s1 == *s2; s1++)
+		{
+			if (i == 3)
+				break;
+			i++;
+			s2++;
+		}
+
+	return (*s1 - *s2);
+}
+
+/**
+ * compareEnv - identifies if first char is a slash.
+ * @s1: first string
+ * @s2: exit string
+ * Return: 1 if yes 0 if no.
+ */
+int compareEnv(char *s1, char *s2)
+{
+	int i = 0;
+
+	for (; (*s2 != '\0' && *s1 != '\0') && *s1 == *s2; s1++)
+		{
+			if (i == 2)
+				break;
+			i++;
+			s2++;
+		}
+
+	return (*s1 - *s2);
+}
+
+/**
  * execute_proc - similar to puts in C
  * @cmd: a pointer the integer we want to set to 402
  *
@@ -213,9 +255,9 @@ void execute_proc(char **cmd)
 
 	if (compara == 0)
 		{
-			slash = str_concat(o,slash);
+			slash = str_concat(o, slash);
 
-			s = str_concat(slash,*cmd);
+			s = str_concat(slash, *cmd);
 
 			char *argv[] = {s, parametro, ".", NULL};
 
@@ -226,7 +268,6 @@ void execute_proc(char **cmd)
 		}
 		else
 			{
-
 				char *argv[] = {*cmd, parametro, ".", NULL};
 
 				if (execve(argv[0], argv, NULL) == -1)
@@ -247,7 +288,7 @@ char **identify_string(char *parameter)
 	char *split;
 	int i = 0;
 
-	split = strtok(parameter, " \t\r\n\a");
+	split = strtok(parameter, " \t\n");
 	while (split != NULL)
 		{
 			buf[i] = split;
@@ -274,6 +315,7 @@ void prompt(void)
 			int status, lenbuf;
 			char *text = NULL;
 			size_t bufsize = 0;
+			extern char **environ;
 
 			place("$ ");
 
@@ -282,6 +324,32 @@ void prompt(void)
 
 			if (lenbuf == -1)
 				exit(98);
+
+			if (compareExit(text, "exit") == 0)
+				exit(98);
+
+			if (compareEnv(text, "env") == 0)
+				{
+					while (*environ != NULL)
+						{
+							if (!(_strcmpdir(*environ, "USER")) ||
+							   !(_strcmpdir(*environ, "LANGUAGE")) ||
+							   !(_strcmpdir(*environ, "SESSION")) ||
+							   !(_strcmpdir(*environ, "COMPIZ_CONFIG_PROFILE")) ||
+							   !(_strcmpdir(*environ, "SHLV")) ||
+							   !(_strcmpdir(*environ, "HOME")) ||
+							   !(_strcmpdir(*environ, "C_IS")) ||
+							   !(_strcmpdir(*environ, "DESKTOP_SESSION")) ||
+							   !(_strcmpdir(*environ, "LOGNAME")) ||
+							   !(_strcmpdir(*environ, "TERM")) ||
+							   !(_strcmpdir(*environ, "PATH")))
+								{
+									place(*environ);
+									place("\n");
+								}
+							environ++;
+						}
+				}
 
 			if (child_pid == -1)
 				{
@@ -330,6 +398,6 @@ int main(int ac, char **av)
 	(void)*av;
 
 	signal(SIGINT, controlC);
-        prompt();
+	prompt();
 	return (0);
 }
