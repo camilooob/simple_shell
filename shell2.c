@@ -14,8 +14,6 @@ int _strlen(char *str);
 void place(char *str);
 char *findfile(char *command);
 char *find_command(char *command);
-int compare(char *s1, char *s2);
-
 
 /**
  * _strcmpdir - compares strings to find dir.
@@ -30,12 +28,12 @@ int _strcmpdir(char *s1, char *s2)
 	int i = 0;
 
 	for (; (*s2 != '\0' && *s1 != '\0') && *s1 == *s2; s1++)
-	{
-		if (i == 3)
-			break;
-		i++;
-		s2++;
-	}
+		{
+			if (i == 3)
+				break;
+			i++;
+			s2++;
+		}
 
 	return (*s1 - *s2);
 }
@@ -53,47 +51,49 @@ char *find_command(char *command)
 	struct dirent *entry;
 	char *cmd, comp;
 
-	char **str  = malloc(sizeof(char) * 1024);
+	char **str  = malloc(sizeof(char)*1024);
 	extern char **environ;
-	char **split = malloc(sizeof(char) * 1024);
+	char **split = malloc(sizeof(char)*1024);
 	int i;
 
-	while (*environ != NULL)
-	{
-		if (!(_strcmpdir(*environ, "PATH")))
+	while(*environ != NULL)
 		{
-			*str = *environ;
-			for (i = 0; i < 9; i++, split++, str++)
-			{
-				*split = strtok(*str, ":='PATH'");
-
-				folder = opendir(*split);
-
-				if (folder == NULL)
+			if(!(_strcmpdir(*environ, "PATH")))
 				{
-					perror("Unable to read directory");
+					*str = *environ;
+					for (i = 0;i < 9;i++, split++, str++)
+						{
+							*split = strtok(*str, ":='PATH'");
+
+							folder = opendir(*split);
+
+							if(folder == NULL)
+								{
+									perror("Unable to read directory");
+								}
+
+							while((entry=readdir(folder)))
+								{
+									cmd = entry->d_name;
+									comp = _strcmpdir(cmd, command);
+
+									if(comp == 0)
+										{
+											return(*split);
+										}
+									else
+										{
+											perror("Error");
+										}
+								}
+						}
+
+
 				}
-
-				while ((entry = readdir(folder)))
-				{
-					cmd = entry->d_name;
-					comp = _strcmpdir(cmd, command);
-
-					if (comp == 0)
-					{
-						return (*split);
-					}
-
-					if (cmd == NULL)
-					{
-						perror("Error");
-					}
-				}
-			}
-		}
 		environ++;
-	}
-	return ("Error: Not Found");
+		}
+
+	return("Error: Not Found");
 }
 
 /**
@@ -196,48 +196,6 @@ int lookforslash(char *cmd)
 }
 
 /**
- * compare - identifies if first char is a slash.
- * @s1: first string
- * @s2: exit string
- * Return: 1 if yes 0 if no.
- */
-int compareExit(char *s1, char *s2)
-{
-	int i = 0;
-
-	for (; (*s2 != '\0' && *s1 != '\0') && *s1 == *s2; s1++)
-	{
-		if (i == 3)
-			break;
-		i++;
-		s2++;
-	}
-
-	return (*s1 - *s2);
-}
-
-/**
- * compareEnv - identifies if first char is a slash.
- * @s1: first string
- * @s2: exit string
- * Return: 1 if yes 0 if no.
- */
-int compareEnv(char *s1, char *s2)
-{
-	int i = 0;
-
-	for (; (*s2 != '\0' && *s1 != '\0') && *s1 == *s2; s1++)
-	{
-		if (i == 2)
-			break;
-		i++;
-		s2++;
-	}
-
-	return (*s1 - *s2);
-}
-
-/**
  * execute_proc - similar to puts in C
  * @cmd: a pointer the integer we want to set to 402
  *
@@ -250,38 +208,32 @@ void execute_proc(char **cmd)
 	char *s, *slash = "/";
 	char *o;
 	char *vartoprint = *cmd;
-	char *argv[4];
 
 	o = find_command(vartoprint);
 
 	if (compara == 0)
-	{
-		slash = str_concat(o, slash);
-
-		s = str_concat(slash, *cmd);
-
-		argv[0] = s;
-		argv[1] = parametro;
-		argv[2] = ".";
-		argv[3] = NULL;
-
-		if (execve(argv[0], argv, NULL) == -1)
 		{
-			perror("Error");
-		}
-	}
-	else
-	{
-		argv[0] = *cmd;
-		argv[1] = parametro;
-		argv[2] = ".";
-		argv[3] = NULL;
+			slash = str_concat(o,slash);
 
-		if (execve(argv[0], argv, NULL) == -1)
-		{
-			perror("Error");
+			s = str_concat(slash,*cmd);
+
+			char *argv[] = {s, parametro, ".", NULL};
+
+				if (execve(argv[0], argv, NULL) == -1)
+				{
+					perror("Error");
+				}
 		}
-	}
+		else
+			{
+
+				char *argv[] = {*cmd, parametro, ".", NULL};
+
+				if (execve(argv[0], argv, NULL) == -1)
+					{
+						perror("Error");
+					}
+			}
 }
 
 /**
@@ -295,15 +247,15 @@ char **identify_string(char *parameter)
 	char *split;
 	int i = 0;
 
-	split = strtok(parameter, " \t\n");
+	split = strtok(parameter, " \t\r\n\a");
 	while (split != NULL)
-	{
-		buf[i] = split;
+		{
+			buf[i] = split;
 
-		i++;
+			i++;
 
-		split = strtok(NULL, " ");
-	}
+			split = strtok(NULL, " ");
+		}
 
 	execute_proc(buf);
 	return (buf);
@@ -315,84 +267,55 @@ char **identify_string(char *parameter)
  **/
 void prompt(void)
 {
-	for (;;)
-	{
-		char *s = "";
-		pid_t child_pid;
-		int status, lenbuf;
-		char *text = NULL;
-		size_t bufsize = 0;
-		extern char **environ;
-		char *argv[3];
-
-		place("$ ");
-
-		lenbuf = getline(&text, &bufsize, stdin);
-		child_pid = fork();
-
-		if (lenbuf == -1)
-			exit(98);
-
-		if (compareExit(text, "exit") == 0)
-			exit(0);
-
-		if (compareEnv(text, "env") == 0)
+		for (;;)
 		{
-			while (*environ != NULL)
-			{
-				if (!(_strcmpdir(*environ, "USER")) ||
-						!(_strcmpdir(*environ, "LANGUAGE")) ||
-						!(_strcmpdir(*environ, "SESSION")) ||
-						!(_strcmpdir(*environ, "COMPIZ_CONFIG_PROFILE")) ||
-						!(_strcmpdir(*environ, "SHLV")) ||
-						!(_strcmpdir(*environ, "HOME")) ||
-						!(_strcmpdir(*environ, "C_IS")) ||
-						!(_strcmpdir(*environ, "DESKTOP_SESSION")) ||
-						!(_strcmpdir(*environ, "LOGNAME")) ||
-						!(_strcmpdir(*environ, "TERM")) ||
-						!(_strcmpdir(*environ, "PATH")))
+			char *s = "";
+			pid_t child_pid;
+			int status, lenbuf;
+			char *text = NULL;
+			size_t bufsize = 0;
+
+			place("$ ");
+
+			lenbuf = getline(&text, &bufsize, stdin);
+			child_pid = fork();
+
+			if (lenbuf == -1)
+				exit(98);
+
+			if (child_pid == -1)
 				{
-					place(*environ);
-					place("\n");
+					perror("Error");
 				}
-				environ++;
-			}
-		}
 
-		if (child_pid == -1)
-		{
-			perror("Error");
-		}
+			if (child_pid == 0)
+				{
+					char *argv[] = {s, ".", NULL};
 
-		if (child_pid == 0)
-		{
-			argv[0] = s;
-			argv[1] = ".";
-			argv[2] = NULL;
+					identify_string(text);
 
-			identify_string(text);
-
-			if (execve(argv[0], argv, NULL) == -1)
-			{
-				place("");
-			}
-			exit(0);
+					if (execve(argv[0], argv, NULL) == -1)
+						{
+							place("");
+						}
+					exit(0);
+				}
+			else
+				{
+					wait(&status);
+				}
 		}
-		else
-		{
-			wait(&status);
-		}
-	}
 }
 
 /**
- * controlC - avoid close the shell
- * @sig: keep going shell
- **/
+* controlC - avoid close the shell
+* @sig: keep going shell
+**/
 void  controlC(int sig)
 {
 	(void) sig;
 	write(1, "\n$ ", 3);
+	return;
 }
 
 /**
@@ -403,10 +326,10 @@ void  controlC(int sig)
  **/
 int main(int ac, char **av)
 {
-	(void)av;
 	(void)ac;
+	(void)*av;
 
 	signal(SIGINT, controlC);
-	prompt();
+        prompt();
 	return (0);
 }
