@@ -81,7 +81,7 @@ char *find_command(char *command)
 
 					if (comp == 0)
 					{
-					    return (*split);
+						return (*split);
 					}
 
 					if (cmd == NULL)
@@ -307,7 +307,6 @@ char **identify_string(char *parameter)
 
 	execute_proc(buf);
 	return (buf);
-
 }
 
 
@@ -328,7 +327,6 @@ void prompt(void)
 		extern char **environ;
 		char *argv[3];
 
-
 		place("$ ");
 
 		lenbuf = getline(&text, &bufsize, stdin);
@@ -336,10 +334,7 @@ void prompt(void)
 
 		if (lenbuf == -1)
         {
-            free(s);
-            free(text);
-            free(environ);
-            free(*environ);
+
             exit(98);
         }
 
