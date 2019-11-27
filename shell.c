@@ -302,7 +302,7 @@ char **identify_string(char *parameter)
 
 		i++;
 
-		split = strtok(NULL, " ");
+		split = strtok(NULL, "\n ");
 	}
 
 	execute_proc(buf);
