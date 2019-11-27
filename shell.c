@@ -29,17 +29,17 @@ int compare(char *s1, char *s2);
  **/
 int _strcmpdir(char *s1, char *s2)
 {
-        int i = 0;
+	int i = 0;
 
-        for (; (*s2 != '\0' && *s1 != '\0') && *s1 == *s2; s1++)
-        {
-                if (i == 3)
-                        break;
-                i++;
-                s2++;
-        }
+	for (; (*s2 != '\0' && *s1 != '\0') && *s1 == *s2; s1++)
+	{
+		if (i == 3)
+			break;
+		i++;
+		s2++;
+	}
 
-        return (*s1 - *s2);
+	return (*s1 - *s2);
 }
 
 /**
@@ -51,51 +51,51 @@ int _strcmpdir(char *s1, char *s2)
  **/
 char *find_command(char *command)
 {
-        DIR *folder;
-        struct dirent *entry;
-        char *cmd, comp;
+	DIR *folder;
+	struct dirent *entry;
+	char *cmd, comp;
 
-        char **str  = malloc(sizeof(char) * 1024);
-        extern char **environ;
-        char **split = malloc(sizeof(char) * 1024);
-        int i;
+	char **str  = malloc(sizeof(char) * 1024);
+	extern char **environ;
+	char **split = malloc(sizeof(char) * 1024);
+	int i;
 
-        while (*environ != NULL)
-        {
-                if (!(_strcmpdir(*environ, "PATH")))
-                {
-                        *str = *environ;
-                        for (i = 0; i < 9; i++, split++, str++)
-                        {
-                                *split = strtok(*str, ":='PATH'");
+	while (*environ != NULL)
+	{
+		if (!(_strcmpdir(*environ, "PATH")))
+		{
+			*str = *environ;
+			for (i = 0; i < 9; i++, split++, str++)
+			{
+				*split = strtok(*str, ":='PATH'");
 
-                                folder = opendir(*split);
+				folder = opendir(*split);
 
-                                if (folder == NULL)
-                                {
-                                        perror("Unable to read directory");
-                                }
+				if (folder == NULL)
+				{
+					perror("Unable to read directory");
+				}
 
-                                while ((entry = readdir(folder)))
-                                {
-                                        cmd = entry->d_name;
-                                        comp = _strcmpdir(cmd, command);
+				while ((entry = readdir(folder)))
+				{
+					cmd = entry->d_name;
+					comp = _strcmpdir(cmd, command);
 
-                                        if (comp == 0)
-                                        {
-                                                return (*split);
-                                        }
+					if (comp == 0)
+					{
+						return (*split);
+					}
 
-                                        if (cmd == NULL)
-                                        {
-                                                perror("Error");
-                                        }
-                                }
-                        }
-                }
-                environ++;
-        }
-        return ("Error: Not Found");
+					if (cmd == NULL)
+					{
+						perror("Error");
+					}
+				}
+			}
+		}
+		environ++;
+	}
+	return ("Error: Not Found");
 }
 
 /**
@@ -107,7 +107,7 @@ char *find_command(char *command)
  */
 int charput(char c)
 {
-        return (write(1, &c, 1));
+	return (write(1, &c, 1));
 }
 
 /**
@@ -118,11 +118,11 @@ int charput(char c)
  */
 void place(char *str)
 {
-        while (*str != '\0')
-        {
-                charput(*str);
-                str++;
-        }
+	while (*str != '\0')
+	{
+		charput(*str);
+		str++;
+	}
 }
 
 /**
@@ -132,12 +132,12 @@ void place(char *str)
  */
 int _strlen(char *str)
 {
-        int i;
+	int i;
 
-        for (i = 0; str[i] != '\0'; i++)
-                ;
+	for (i = 0; str[i] != '\0'; i++)
+		;
 
-        return (i);
+	return (i);
 }
 
 /**
@@ -148,34 +148,34 @@ int _strlen(char *str)
  */
 char *str_concat(char *s1, char *s2)
 {
-        char *a;
-        int lens1, lens2, j, i, e;
+	char *a;
+	int lens1, lens2, j, i, e;
 
-        if (s1 == NULL)
-                s1 = "";
+	if (s1 == NULL)
+		s1 = "";
 
-        if (s2 == NULL)
-                s2 = "";
+	if (s2 == NULL)
+		s2 = "";
 
-        lens1 = _strlen(s1);
+	lens1 = _strlen(s1);
 
-        lens2 = _strlen(s2);
+	lens2 = _strlen(s2);
 
-        a = malloc(((lens1) + (lens2) + 1) * sizeof(char));
+	a = malloc(((lens1) + (lens2) + 1) * sizeof(char));
 
-        if (a == NULL)
-                return (NULL);
+	if (a == NULL)
+		return (NULL);
 
-        for (j = 0; j < lens1; j++)
-        {
-                a[j] = s1[j];
-        }
+	for (j = 0; j < lens1; j++)
+	{
+		a[j] = s1[j];
+	}
 
-        for (i = lens1, e = 0; e <= lens2; i++, e++)
-        {
-                a[i] = s2[e];
-        }
-        return (a);
+	for (i = lens1, e = 0; e <= lens2; i++, e++)
+	{
+		a[i] = s2[e];
+	}
+	return (a);
 }
 
 /**
@@ -185,20 +185,19 @@ char *str_concat(char *s1, char *s2)
  */
 int lookforslash(char *cmd)
 {
-        int cont = 0;
+	int cont = 0;
 
-        while (cmd[cont])
-        {
-                if (cmd[0] == '/')
-                {
-                        printf("%c\n", cmd[0]);
-                        return (1);
-                        break;
-                }
+	while (cmd[cont])
+	{
+		if (cmd[0] == '/')
+		{
+			printf("%c\n", cmd[0]);
+			return (1);
+		}
 
-                cont++;
-        }
-        return (0);
+		cont++;
+	}
+	return (0);
 }
 
 /**
@@ -209,17 +208,17 @@ int lookforslash(char *cmd)
  */
 int compareExit(char *s1, char *s2)
 {
-        int i = 0;
+	int i = 0;
 
-        for (; (*s2 != '\0' && *s1 != '\0') && *s1 == *s2; s1++)
-        {
-                if (i == 3)
-                        break;
-                i++;
-                s2++;
-        }
+	for (; (*s2 != '\0' && *s1 != '\0') && *s1 == *s2; s1++)
+	{
+		if (i == 3)
+			break;
+		i++;
+		s2++;
+	}
 
-        return (*s1 - *s2);
+	return (*s1 - *s2);
 }
 
 /**
@@ -230,17 +229,17 @@ int compareExit(char *s1, char *s2)
  */
 int compareEnv(char *s1, char *s2)
 {
-        int i = 0;
+	int i = 0;
 
-        for (; (*s2 != '\0' && *s1 != '\0') && *s1 == *s2; s1++)
-        {
-                if (i == 2)
-                        break;
-                i++;
-                s2++;
-        }
+	for (; (*s2 != '\0' && *s1 != '\0') && *s1 == *s2; s1++)
+	{
+		if (i == 2)
+			break;
+		i++;
+		s2++;
+	}
 
-        return (*s1 - *s2);
+	return (*s1 - *s2);
 }
 
 /**
@@ -252,43 +251,43 @@ int compareEnv(char *s1, char *s2)
 void execute_proc(char **cmd)
 {
 
-        char *parametro = (*(cmd + 1));
-        char *s, *slash = "/";
-        char *o;
+	char *parametro = (*(cmd + 1));
+	char *s, *slash = "/";
+	char *o;
 
-        char *vartoprint = *cmd;
-        char *argv[4];
+	char *vartoprint = *cmd;
+	char *argv[4];
 
-        if ((access(cmd[0], F_OK) == 0))
-        {
-                argv[0] = cmd[0];
-                argv[1] = parametro;
-                argv[2] = ".";
-                argv[3] = NULL;
+	if ((access(cmd[0], F_OK) == 0))
+	{
+		argv[0] = cmd[0];
+		argv[1] = parametro;
+		argv[2] = ".";
+		argv[3] = NULL;
 
-                if (execve(argv[0], argv, NULL) == -1)
-                {
-                        perror("Error");
-                }
-        }
-        else
-        {
-                o = find_command(vartoprint);
+		if (execve(argv[0], argv, NULL) == -1)
+		{
+			perror("Error");
+		}
+	}
+	else
+	{
+		o = find_command(vartoprint);
 
-                slash = str_concat(o, slash);
+		slash = str_concat(o, slash);
 
-                s = str_concat(slash, *cmd);
+		s = str_concat(slash, *cmd);
 
-                argv[0] = s;
-                argv[1] = parametro;
-                argv[2] = ".";
-                argv[3] = NULL;
+		argv[0] = s;
+		argv[1] = parametro;
+		argv[2] = ".";
+		argv[3] = NULL;
 
-                if (execve(argv[0], argv, NULL) == -1)
-                {
-                        perror("Error");
-                }
-        }
+		if (execve(argv[0], argv, NULL) == -1)
+		{
+			perror("Error");
+		}
+	}
 }
 
 /**
@@ -298,22 +297,22 @@ void execute_proc(char **cmd)
  **/
 char **identify_string(char *parameter)
 {
-        char **buf = malloc(1024 * sizeof(char *));
-        char *split;
-        int i = 0;
-        char *delim = " \t\n";
+	char **buf = malloc(1024 * sizeof(char *));
+	char *split;
+	int i = 0;
+	char *delim = " \t\n";
 
 
-        split = strtok(parameter, delim);
+	split = strtok(parameter, delim);
 
-        while (split != NULL)
-        {
-                buf[i] = split;
-                i++;
-                split = strtok(NULL, delim);
-        }
-        execute_proc(buf);
-        return (buf);
+	while (split != NULL)
+	{
+		buf[i] = split;
+		i++;
+		split = strtok(NULL, delim);
+	}
+	execute_proc(buf);
+	return (buf);
 
 }
 
@@ -325,69 +324,69 @@ char **identify_string(char *parameter)
  **/
 void prompt(void)
 {
-        for (;;)
-        {
-                char *s = "";
-                pid_t child_pid;
-                int status, lenbuf;
-                char *text = NULL;
-                size_t bufsize = 0;
-                extern char **environ;
-       
-                place("$ ");
+	for (;;)
+	{
+		char *s = "";
+		pid_t child_pid;
+		int status, lenbuf;
+		char *text = NULL;
+		size_t bufsize = 0;
+		extern char **environ;
 
-                lenbuf = getline(&text, &bufsize, stdin);
+		place("$ ");
+
+		lenbuf = getline(&text, &bufsize, stdin);
 
 
-                if (lenbuf == -1)
-                {
-                        free(s);
-                        free(text);
-                        free(environ);
-                        free(*environ);
-                        exit(98);
-                }
+		if (lenbuf == -1)
+		{
+			free(s);
+			free(text);
+			free(environ);
+			free(*environ);
+			exit(98);
+		}
 
-                if (compareExit(text, "exit") == 0)
-                        exit(0);
+		if (compareExit(text, "exit") == 0)
+			exit(0);
 
-                if (compareEnv(text, "env") == 0)
-                {
-                        while (*environ != NULL)
-                        {
-                                if (!(_strcmpdir(*environ, "USER")) ||
-                                    !(_strcmpdir(*environ, "LANGUAGE")) ||
-                                    !(_strcmpdir(*environ, "SESSION")) ||
-                                    !(_strcmpdir(*environ, "COMPIZ_CONFIG_PROFILE")) ||
-                                    !(_strcmpdir(*environ, "SHLV")) ||
-                                    !(_strcmpdir(*environ, "HOME")) ||
-                                    !(_strcmpdir(*environ, "C_IS")) ||
-                                    !(_strcmpdir(*environ, "DESKTOP_SESSION")) ||
-                                    !(_strcmpdir(*environ, "LOGNAME")) ||
-                                    !(_strcmpdir(*environ, "TERM")) ||
-                                    !(_strcmpdir(*environ, "PATH")))
-                                {
-                                        place(*environ);
-                                        place("\n");
-                                }
-                                environ++;
-                        }
-                }
-                child_pid = fork();
-                if (child_pid < 0)
-                {
-                        perror("Error");
-                }
+		if (compareEnv(text, "env") == 0)
+		{
+			while (*environ != NULL)
+			{
+				if (!(_strcmpdir(*environ, "USER")) ||
+						!(_strcmpdir(*environ, "LANGUAGE")) ||
+						!(_strcmpdir(*environ, "SESSION")) ||
+						!(_strcmpdir(*environ, "COMPIZ_CONFIG_PROFILE")) ||
+						!(_strcmpdir(*environ, "SHLV")) ||
+						!(_strcmpdir(*environ, "HOME")) ||
+						!(_strcmpdir(*environ, "C_IS")) ||
+						!(_strcmpdir(*environ, "DESKTOP_SESSION")) ||
+						!(_strcmpdir(*environ, "LOGNAME")) ||
+						!(_strcmpdir(*environ, "TERM")) ||
+						!(_strcmpdir(*environ, "PATH")))
+				{
+					place(*environ);
+					place("\n");
+				}
+				environ++;
+			}
+		}
+		child_pid = fork();
+		if (child_pid < 0)
+		{
+			perror("Error");
+		}
 
-                if (child_pid == 0)
-                {
-                        identify_string(text);
-                }
-                else
-                {
-                        wait(&status);
-                }
-        }
+		if (child_pid == 0)
+		{
+			identify_string(text);
+		}
+		else
+		{
+			wait(&status);
+		}
+	}
 }
 
 /**
@@ -396,8 +395,8 @@ void prompt(void)
  **/
 void  controlC(int sig)
 {
-        (void) sig;
-        write(1, "\n$ ", 3);
+	(void) sig;
+	write(1, "\n$ ", 3);
 }
 
 /**
@@ -408,10 +407,10 @@ void  controlC(int sig)
  **/
 int main(int ac, char **av)
 {
-        (void)av;
-        (void)ac;
+	(void)av;
+	(void)ac;
 
-        signal(SIGINT, controlC);
-        prompt();
-        return (0);
+	signal(SIGINT, controlC);
+	prompt();
+	return (0);
 }
