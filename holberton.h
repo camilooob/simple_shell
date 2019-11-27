@@ -1,6 +1,5 @@
 #ifndef _HOLBERTON_H_
 #define _HOLBERTON_H_
-
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <stdio.h>
@@ -11,6 +10,8 @@
 #include <dirent.h>
 #include <limits.h>
 #include <string.h>
+
+extern char **environ;
 
 char *show_input(void);
 void prompt(void);
@@ -30,5 +31,4 @@ int compareEnv(char *s1, char *s2);
 void execute_proc(char **cmd);
 char **identify_string(char *parameter);
 void controlC(int sig);
-
 #endif
