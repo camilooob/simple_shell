@@ -16,7 +16,7 @@ void prompt(void)
 		place("$ ");
 		lenbuf = getline(&text, &bufsize, stdin);
 		if (lenbuf == -1)
-		exit(98); 
+			exit(98);
 		if (compareExit(text, "exit") == 0)
 			exit(0);
 		if (compareEnv(text, "env") == 0)
@@ -44,4 +44,4 @@ void prompt(void)
 			identify_string(text);
 		else
 			wait(&status);
- }}
+	}}
