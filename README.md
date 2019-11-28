@@ -46,7 +46,7 @@ gcc -Wall -Werror -Wextra -pedantic *.c -o hsh
 This wil compile all the '.c' files and change the output's name to 'hsh'.
 
 ### Template to test output:
-=======
+========
 $ ./hsh
 
 ($) 
