@@ -8,7 +8,7 @@ void prompt(void)
 {
 	for (;;)
 	{
-		char *s = "", *text = NULL, **environ;
+		char *text = NULL, **environ;
 		pid_t child_pid;
 		int status, lenbuf;
 		size_t bufsize = 0;
@@ -16,9 +16,7 @@ void prompt(void)
 		place("$ ");
 		lenbuf = getline(&text, &bufsize, stdin);
 		if (lenbuf == -1)
-		{
-			free(s), free(text), free(environ);
-			exit(98); }
+		exit(98); 
 		if (compareExit(text, "exit") == 0)
 			exit(0);
 		if (compareEnv(text, "env") == 0)
@@ -45,4 +43,5 @@ void prompt(void)
 		if (child_pid == 0)
 			identify_string(text);
 		else
-			wait(&status); }}
+			wait(&status);
+ }}
